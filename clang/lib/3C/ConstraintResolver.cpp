@@ -545,8 +545,11 @@ CVarSet ConstraintResolver::getExprConstraintVars(Expr *E) {
         auto PSL = PersistentSourceLoc::mkPSL(CE, *Context);
         // Important: Do Safe_to_Wild from returnvar in this copy, which then
         //   might be assigned otherwise (Same_to_Same) to LHS
-        if (NewCV != CV)
-          constrainConsVarGeq(NewCV, CV, CS, &PSL, Safe_to_Wild, false, &Info);
+        if (NewCV != CV) {
+          ConsAction CA = Rewriter::isRewritable(CE->getBeginLoc())
+                          ? Safe_to_Wild : Same_to_Same;
+          constrainConsVarGeq(NewCV, CV, CS, &PSL, CA, false, &Info);
+        }
         TmpCVs.insert(NewCV);
         // If this is realloc, constrain the first arg to flow to the return
         if (!ReallocFlow.empty()) {
