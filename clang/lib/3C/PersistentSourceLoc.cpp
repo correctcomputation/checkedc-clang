@@ -20,20 +20,18 @@ using namespace llvm;
 // If we want to add more complete source for macros in the future, I expect we
 // will need to the spelling location instead.
 PersistentSourceLoc PersistentSourceLoc::mkPSL(const Decl *D, ASTContext &C) {
-  SourceLocation SL = C.getSourceManager().getExpansionLoc(D->getLocation());
-  return mkPSL(D->getSourceRange(), SL, C);
+  return mkPSL(D->getSourceRange(), D->getLocation(), C);
 }
 
 // Create a PersistentSourceLoc for a Stmt.
-PersistentSourceLoc PersistentSourceLoc::mkPSL(const Stmt *S,
-                                               ASTContext &Context) {
-  return mkPSL(S->getSourceRange(), S->getBeginLoc(), Context);
+PersistentSourceLoc PersistentSourceLoc::mkPSL(const Stmt *S, ASTContext &C) {
+  return mkPSL(S->getSourceRange(), S->getBeginLoc(), C);
 }
 
 // Create a PersistentSourceLoc for an Expression.
 PersistentSourceLoc PersistentSourceLoc::mkPSL(const clang::Expr *E,
-                                               clang::ASTContext &Context) {
-  return mkPSL(E->getSourceRange(), E->getBeginLoc(), Context);
+                                               clang::ASTContext &C) {
+  return mkPSL(E->getSourceRange(), E->getBeginLoc(), C);
 }
 
 // Use the PresumedLoc infrastructure to get a file name and expansion
@@ -73,8 +71,8 @@ PersistentSourceLoc PersistentSourceLoc::mkPSL(clang::SourceRange SR,
     getCanonicalFilePath(ToConv, FeAbsS);
     Fn = std::string(sys::path::remove_leading_dotslash(FeAbsS));
   }
-  PersistentSourceLoc PSL(Fn, FESL.getExpansionLineNumber(),
-                          FESL.getExpansionColumnNumber(), EndCol);
+  PersistentSourceLoc PSL(Fn, SM.getSpellingLineNumber(SL),
+                          SM.getSpellingColumnNumber(SL), EndCol);
 
   return PSL;
 }
