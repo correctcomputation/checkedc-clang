@@ -1071,10 +1071,6 @@ void ProgramInfo::setTypeParamBinding(CallExpr *CE, unsigned int TypeVarIdx,
 
   auto PSL = PersistentSourceLoc::mkPSL(CE, *C);
   auto CallMap = TypeParamBindings[PSL];
-  //if (CallMap.find(TypeVarIdx) != CallMap.end()) {
-  //  PSL.dump();
-  //  llvm::errs() << "\n";
-  //}
   //assert("Attempting to overwrite type param binding in ProgramInfo." &&
   //       CallMap.find(TypeVarIdx) == CallMap.end());
 
