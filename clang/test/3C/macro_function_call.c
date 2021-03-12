@@ -69,7 +69,7 @@ void caller2(int *a) {
 void fn3(int **g) {}
 void caller3() {
   int **a = (int **) 1;
-  fn3(a);
+  macro3
 }
 //CHECK: #define macro3 fn3(a);
 //CHECK: void fn3(int **g) {}
@@ -84,7 +84,9 @@ void fn4a(int *g) {}
 void fn4b(int *g) {}
 void caller4() {
   int *a = (int *) 1;
-  void (*fn)(int *) = 0 ? fn4a : fn4b;
+  void (*fn)(int *) =  fn4a;
+  if (0)
+    fn = fn4b;
   macro4
 }
 //CHECK: #define macro4 fn(a);
@@ -92,6 +94,8 @@ void caller4() {
 //CHECK: void fn4b(int *g) {}
 //CHECK: void caller4() {
 //CHECK:   int *a = (int *) 1;
-//CHECK:   _Ptr<void (int *)> fn = 0 ? fn4a : fn4b;
+//CHECK:   _Ptr<void (int *)> fn = fn4a;
+//CHECK:   if (0)
+//CHECK:     fn = fn4b;
 //CHECK:   macro4
 //CHECK: }
