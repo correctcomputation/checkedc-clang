@@ -46,14 +46,14 @@ struct fptrarr {
     char *name;
 	//CHECK: _Ptr<char> name;
     int (*mapper)(int);
-	//CHECK: _Ptr<int (int )> mapper;
+	//CHECK: _Ptr<int (int)> mapper;
 };
 
 struct fptr { 
     int *value; 
 	//CHECK: _Ptr<int> value; 
     int (*func)(int);
-	//CHECK: _Ptr<int (int )> func;
+	//CHECK: _Ptr<int (int)> func;
 };  
 
 struct arrfptr { 
@@ -62,7 +62,7 @@ struct arrfptr {
 	//CHECK_ALL: int args _Checked[5]; 
     int (*funcs[5]) (int);
 	//CHECK_NOALL: int (*funcs[5]) (int);
-	//CHECK_ALL: _Ptr<int (int )> funcs _Checked[5];
+	//CHECK_ALL: _Ptr<int (int)> funcs _Checked[5];
 };
 
 int add1(int x) { 
@@ -102,8 +102,8 @@ int *mul2(int *x) {
 }
 
 int * sus(int (*x) (int), int (*y) (int)) {
-	//CHECK_NOALL: int *sus(int (*x) (int), _Ptr<int (int )> y) : itype(_Ptr<int>) {
-	//CHECK_ALL: _Array_ptr<int> sus(int (*x) (int), _Ptr<int (int )> y) {
+	//CHECK_NOALL: int *sus(int (*x) (int), _Ptr<int (int)> y) : itype(_Ptr<int>) {
+	//CHECK_ALL: _Array_ptr<int> sus(int (*x) (int), _Ptr<int (int)> y) {
  
         x = (int (*) (int)) 5;
 	//CHECK: x = (int (*) (int)) 5;
@@ -129,8 +129,8 @@ int * foo() {
         int (*y)(int) = mul2; 
 	//CHECK: int (*y)(int) = mul2; 
         int *z = sus(x, y);
-	//CHECK_NOALL: _Ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int )>>(y));
-	//CHECK_ALL: _Array_ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int )>>(y));
+	//CHECK_NOALL: _Ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int)>>(y));
+	//CHECK_ALL: _Array_ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int)>>(y));
         
 return z; }
 
@@ -143,8 +143,8 @@ int * bar() {
         int (*y)(int) = mul2; 
 	//CHECK: int (*y)(int) = mul2; 
         int *z = sus(x, y);
-	//CHECK_NOALL: int *z = sus(x, _Assume_bounds_cast<_Ptr<int (int )>>(y));
-	//CHECK_ALL: _Array_ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int )>>(y));
+	//CHECK_NOALL: int *z = sus(x, _Assume_bounds_cast<_Ptr<int (int)>>(y));
+	//CHECK_ALL: _Array_ptr<int> z = sus(x, _Assume_bounds_cast<_Ptr<int (int)>>(y));
         
 z += 2;
 return z; }
